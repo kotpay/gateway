@@ -27,7 +27,7 @@ class OrderController(
     fun register(@RequestBody request: OrderRegisterRequest): Response<OrderRegisterResponse> {
         logger.info { "Received order register request with payload $request" }
         val orderId = orderService.registerOrder(request.amount, request.currency, request.returnUrl)
-        val formUrl = orderService.getFormUrl()
+        val formUrl = orderService.getFormUrl(orderId)
         val orderRegisterResponse = OrderRegisterResponse(orderId, formUrl)
         logger.info { "Returning order register response with payload $orderRegisterResponse" }
         return SuccessResponse(orderRegisterResponse)
