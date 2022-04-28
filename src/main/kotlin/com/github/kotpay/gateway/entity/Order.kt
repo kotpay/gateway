@@ -11,7 +11,7 @@ import javax.persistence.Id
 import javax.persistence.Table
 
 @Entity
-@Table(name = "order")
+@Table(name = "order_info")
 open class Order {
 
     @Id

@@ -5,32 +5,37 @@ import com.github.kotpay.gateway.exception.LocalizableException
 import com.github.kotpay.gateway.web.common.ErrorHolder
 import com.github.kotpay.gateway.web.common.ErrorResponse
 import mu.KotlinLogging
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.ControllerAdvice
 import org.springframework.web.bind.annotation.ExceptionHandler
+import org.springframework.web.context.request.WebRequest
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler
 
 @ControllerAdvice
-class GlobalExceptionHandler {
-    private final val logger = KotlinLogging.logger {}
+class GlobalExceptionHandler : ResponseEntityExceptionHandler() {
+    private final val log = KotlinLogging.logger {}
+
+    override fun handleExceptionInternal(
+        ex: Exception,
+        body: Any?,
+        headers: HttpHeaders,
+        status: HttpStatus,
+        request: WebRequest
+    ): ResponseEntity<Any> {
+        return handleExceptionInternal(ex, ErrorCode.SERVER_INTERNAL)
+    }
 
     @ExceptionHandler(value = [LocalizableException::class])
     fun handleLocalizableException(exception: LocalizableException): ResponseEntity<Any> {
-        return handleExceptionInternal(exception, exception.errorCode.code)
+        return handleExceptionInternal(exception, exception.errorCode)
     }
 
-    private fun handleExceptionInternal(exception: Throwable, code: String): ResponseEntity<Any> {
-        logger.error(exception) { "Caught unhandled exception" }
-        val errorHolder = ErrorHolder(code, "Internal error")
-        logger.info { "Returning error holder $errorHolder" }
-        val errorResponse = ErrorResponse<Any>(errorHolder)
-        return ResponseEntity.ok(errorResponse)
-    }
-
-    @ExceptionHandler(value = [Exception::class])
-    fun handleException(exception: Exception): ResponseEntity<Any> {
-        logger.error(exception) { "Caught unhandled exception" }
-        val errorHolder = ErrorHolder(ErrorCode.SERVER_INTERNAL.code, "Internal error")
-        logger.info { "Returning error holder $errorHolder" }
+    fun handleExceptionInternal(exception: Exception, errorCode: ErrorCode): ResponseEntity<Any> {
+        log.error(exception) { "Caught exception" }
+        val errorHolder = ErrorHolder(errorCode.code, "Internal error")
+        log.info { "Returning error payload $errorHolder" }
         val errorResponse = ErrorResponse<Any>(errorHolder)
         return ResponseEntity.ok(errorResponse)
     }

@@ -36,6 +36,7 @@ class OrderService(
         order.amount = amount
         order.currencyCode = currencyCode
         order.returnUrl = returnUrl
+        order.status = Order.Status.CREATED
         val savedOrder = orderRepository.save(order)
         logger.info { "Saved order ${order.id}" }
         return savedOrder.orderId!!
