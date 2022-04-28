@@ -63,7 +63,7 @@ class OrderService(
         order.status = Order.Status.DEPOSITED
     }
 
-    fun getFormUrl(): String {
-        return formUrl
+    fun getFormUrl(orderId: String): String {
+        return "$formUrl?orderId=$orderId"
     }
 }
