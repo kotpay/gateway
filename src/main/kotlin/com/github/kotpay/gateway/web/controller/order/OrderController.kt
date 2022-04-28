@@ -11,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation
 import mu.KotlinLogging
 import org.springframework.http.MediaType.APPLICATION_JSON_VALUE
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -23,7 +24,7 @@ class OrderController(
 
     @PostMapping("/register.do")
     @Operation(summary = "Registers order and returns url to payment page")
-    fun register(request: OrderRegisterRequest): Response<OrderRegisterResponse> {
+    fun register(@RequestBody request: OrderRegisterRequest): Response<OrderRegisterResponse> {
         logger.info { "Received order register request with payload $request" }
         val orderId = orderService.registerOrder(request.amount, request.currency, request.returnUrl)
         val formUrl = orderService.getFormUrl()
@@ -34,7 +35,7 @@ class OrderController(
 
     @PostMapping("/status.do")
     @Operation(summary = "Returns order status")
-    fun status(orderStatusRequest: OrderStatusRequest): Response<OrderStatusResponse> {
+    fun status(@RequestBody orderStatusRequest: OrderStatusRequest): Response<OrderStatusResponse> {
         logger.info { "Received order status request with payload $orderStatusRequest" }
         val order = orderService.getOrder(orderStatusRequest.orderId)
         val response = OrderStatusResponse(order.status!!, order.amount!!, order.currencyCode!!, order.returnUrl!!)
