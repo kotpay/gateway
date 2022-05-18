@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@CrossOrigin(origins = ["*"])
+@CrossOrigin(originPatterns = ["*"])
 @RequestMapping("/order", consumes = [APPLICATION_JSON_VALUE], produces = [APPLICATION_JSON_VALUE])
 class OrderController(
     private val orderService: OrderService,

@@ -16,7 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
-@CrossOrigin(origins = ["*"])
+@CrossOrigin(originPatterns = ["*"])
 @RequestMapping("/payment", consumes = [APPLICATION_JSON_VALUE], produces = [APPLICATION_JSON_VALUE])
 class PaymentController(
     private val orderService: OrderService,
