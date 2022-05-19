@@ -64,6 +64,6 @@ class OrderService(
     }
 
     fun getFormUrl(orderId: String): String {
-        return "$formUrl?orderId=$orderId"
+        return "$formUrl$orderId"
     }
 }
